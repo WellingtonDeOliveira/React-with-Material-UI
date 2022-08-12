@@ -5,6 +5,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import './index.css';
+import gerarPDF from '../gerarpdf';
+import { useForm } from 'react-hook-form';
 
 const btn = {
     marginTop: 25, 
@@ -15,11 +17,17 @@ const btn = {
 }
 
 export function Form(){
+
+    /* Radions */
     const [value, setValue] = React.useState('');
     const [camera, setCamera] = React.useState('');
     const [suspeito, setSuspeito] = React.useState('');
     const [sexo, setSexo] = React.useState('');
     const [escolaridade, setEscolaridade] = React.useState('');
+
+    const { register, handleSubmit } = useForm();
+
+    const [dados, setDados] = React.useState({});
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue((event.target as HTMLInputElement).value);
@@ -39,15 +47,22 @@ export function Form(){
     const handleChangeEscolaridade = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEscolaridade((event.target as HTMLInputElement).value);
     };
-  
-    function handleSubmit() {
-      alert('A name was submitted: ' + value + camera + suspeito + sexo + escolaridade);
+
+    const guardarInfo = (e: any) => {
+        e["value"] = value;
+        e["camera"] = camera;
+        e["suspeito"] = suspeito;
+        e["sexo"] = sexo;
+        e["escolaridade"] = escolaridade;
+        setDados(e);
+        gerarPDF(dados);
     }
+
     return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(guardarInfo)} className="content" method='post'>
         <div className='header'>
             <h1>RECOGNIÇÃO VISUOGRÁFICA DE LOCAL DE CRIME nº </h1>
-            <input type={'text'} id="input-basic" required/>
+            <input type={'text'} {...register("numero")} id="input-basic" required/>
             <h1>/2022</h1>
         </div>
         {/* header */}
@@ -56,23 +71,23 @@ export function Form(){
                 <FormControlLabel value="local" control={<Radio color='default' />} label="Vítima no local" />
                 <FormControlLabel value="socorrido" control={<Radio color='default' />} label="Vítima socorrida" />
             </RadioGroup>
-            {value == 'socorrido'? (<><TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="Hospital" /><br/></>): null}
+            {value == 'socorrido'? (<><TextField required style={{marginLeft: 15, width: '300px'}} {...register("hospital")} id="outline-basic" label="Hospital" /><br/></>): null}
         </div>
         {/* dados essenciais */}
         <div >
             <h3>Dados essenciais da ocorrência</h3>
             <div style={{ flexDirection: 'row', display: 'flex', justifyContent: 'center'}}>
-                <TextField required style={{marginLeft: 15, width: '300px'}} id="standard-required" label="Endereço" />
-                <TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="Bairro" />
-                <TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="AIS" />
+                <TextField required style={{marginLeft: 15, width: '300px'}} {...register("endereco")} id="standard-required" label="Endereço" />
+                <TextField required style={{marginLeft: 15, width: '300px'}} {...register("bairro")} id="outline-basic" label="Bairro" />
+                <TextField required style={{marginLeft: 15, width: '300px'}} {...register("ais")} id="outline-basic" label="AIS" />
             </div>
             <div style={{ flexDirection: 'row', display: 'flex', justifyContent: 'center'}}>
-                <TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="Cidade" />
-                <TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="Data" />
+                <TextField required style={{marginLeft: 15, width: '300px'}} {...register("cidade")} id="outline-basic" label="Cidade" />
+                <TextField required style={{marginLeft: 15, width: '300px'}} {...register("data")} id="outline-basic" label="Data" />
             </div>
             <div style={{ flexDirection: 'row', display: 'flex', justifyContent: 'center'}}>
-                <TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="Dia da semana" />
-                <TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="Hora provável do crime" />
+                <TextField required style={{marginLeft: 15, width: '300px'}} {...register("week")} id="outline-basic" label="Dia da semana" />
+                <TextField required style={{marginLeft: 15, width: '300px'}} {...register("hora")} id="outline-basic" label="Hora provável do crime" />
             </div>
             <h3 style={{marginTop: 30}}>Há câmeras de vigilância no local ou no entorno?</h3>
             <RadioGroup style={{flexDirection: 'row', justifyContent: 'center'}} aria-label="gender" name="gender1" value={camera} onChange={handleChangeCamera}>
@@ -88,19 +103,19 @@ export function Form(){
                 <FormControlLabel value="sim" control={<Radio color='default' />} label="Sim" />
             </RadioGroup>
             {suspeito == 'sim'? (<>
-            <TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="Nome(s)/Cognome(s): " />
-            <TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="Informações relevantes: " />
+            <TextField required style={{marginLeft: 15, width: '300px'}} {...register("nomes")} id="outline-basic" label="Nome(s)/Cognome(s): " />
+            <TextField required style={{marginLeft: 15, width: '300px'}} {...register("info")} id="outline-basic" label="Informações relevantes: " />
             </>): null}
         </div>
         {/* Dados da vítima */}
         <div>
             <h3>Dados da Vítima</h3>
             <div style={{ flexDirection: 'row', display: 'flex', justifyContent: 'center'}}>
-                <TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="Nome:" />
-                <TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="D.N.:" />
+                <TextField required style={{marginLeft: 15, width: '300px'}} {...register("nome")} id="outline-basic" label="Nome:" />
+                <TextField required style={{marginLeft: 15, width: '300px'}} {...register("dn")} id="outline-basic" label="D.N.:" />
             </div>
             <div style={{ flexDirection: 'row', display: 'flex', justifyContent: 'center'}}>
-                <TextField required style={{marginLeft: -5, width: '300px'}} id="outline-basic" label="Filiação:" />
+                <TextField required style={{marginLeft: -5, width: '300px'}} {...register("filiacao")} id="outline-basic" label="Filiação:" />
                 <h4 style={{marginLeft: 15, marginRight: 10}}>Sexo:</h4>
                 <RadioGroup style={{flexDirection: 'row', justifyContent: 'center'}} aria-label="gender" name="gender1" value={sexo} onChange={handleChangeSexo}>
                     <FormControlLabel value="masculino" control={<Radio color='default' />} label="Masculino" />
@@ -108,12 +123,12 @@ export function Form(){
                 </RadioGroup>
             </div>
             <div style={{ flexDirection: 'row', display: 'flex', justifyContent: 'center'}}>
-                <TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="Endereço:" />
-                <TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="Bairro:" />
+                <TextField required style={{marginLeft: 15, width: '300px'}} {...register("endereco2")} id="outline-basic" label="Endereço:" />
+                <TextField required style={{marginLeft: 15, width: '300px'}} {...register("bairro2")} id="outline-basic" label="Bairro:" />
             </div>
             <div style={{ flexDirection: 'row', display: 'flex', justifyContent: 'center'}}>
-                <TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="Cidade:" />
-                <TextField required style={{marginLeft: 15, width: '300px'}} id="outline-basic" label="Referência:" />
+                <TextField required style={{marginLeft: 15, width: '300px'}} {...register("cidade2")} id="outline-basic" label="Cidade:" />
+                <TextField required style={{marginLeft: 15, width: '300px'}} {...register("refe")} id="outline-basic" label="Referência:" />
             </div>
             <div style={{ flexDirection: 'row', display: 'flex', justifyContent: 'center', marginTop: 40}}>
                 <h4 style={{marginTop: 50, marginRight: 10}}>Escolaridade:</h4>
@@ -137,5 +152,6 @@ export function Form(){
         </div>
         <Button style={btn} variant="contained" type="submit" value="Submit" color="primary">Enviar</Button>
     </form>
+    
     );
 }
