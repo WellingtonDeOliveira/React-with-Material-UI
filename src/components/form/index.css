@@ -1,0 +1,29 @@
+.radiogroup{
+    display: flex;
+    flex-direction: row;
+}
+.header{
+    display: flex; 
+    flex-Direction: row; 
+    justify-content: center;
+    box-shadow: 0px 1px 10px black;
+    background-color: #00B8FF;
+    margin-bottom: 20px;
+}
+form{
+    text-align: center;
+    align-items: center;
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+#input-basic{
+    width: 70px;
+    height: 30px;
+    background-color: rgb(215, 205, 205);
+    text-decoration: none;
+    border: 0;
+    margin-top: 25px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
