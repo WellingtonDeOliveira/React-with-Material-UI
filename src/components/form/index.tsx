@@ -19,15 +19,13 @@ const btn = {
 export function Form(){
 
     /* Radions */
-    const [value, setValue] = React.useState('');
-    const [camera, setCamera] = React.useState('');
-    const [suspeito, setSuspeito] = React.useState('');
-    const [sexo, setSexo] = React.useState('');
-    const [escolaridade, setEscolaridade] = React.useState('');
+    const [value, setValue] = React.useState('local');
+    const [camera, setCamera] = React.useState('nao');
+    const [suspeito, setSuspeito] = React.useState('nao');
+    const [sexo, setSexo] = React.useState('masculino');
+    const [escolaridade, setEscolaridade] = React.useState('analfabeto');
 
     const { register, handleSubmit } = useForm();
-
-    const [dados, setDados] = React.useState({});
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue((event.target as HTMLInputElement).value);
@@ -54,10 +52,12 @@ export function Form(){
         e["suspeito"] = suspeito;
         e["sexo"] = sexo;
         e["escolaridade"] = escolaridade;
-        setDados(e);
-        gerarPDF(dados);
+        gerarPDF(e);
     }
 
+    /*function download(e){
+    }
+*/
     return (
     <form onSubmit={handleSubmit(guardarInfo)} className="content" method='post'>
         <div className='header'>
