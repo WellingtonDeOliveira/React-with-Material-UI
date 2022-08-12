@@ -150,7 +150,7 @@ export function Form(){
                 </RadioGroup>
             </div>
         </div>
-        <Button style={btn} variant="contained" type="submit" value="Submit" color="primary">Enviar</Button>
+        <Button style={btn} variant="contained" type="submit" value="Submit" color="primary">Download</Button>
     </form>
     
     );
